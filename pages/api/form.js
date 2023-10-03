@@ -3,7 +3,7 @@
 import { Pool } from 'pg';
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'your_database_connection_string',
+  connectionString: process.env.DATABASE_URL || 'postgres://default:E1g7HuMAkcRn@ep-billowing-boat-04198773.eu-central-1.postgres.vercel-storage.com:5432/verceldb',
   ssl: {
     rejectUnauthorized: false, // For testing purposes only. In production, set to true.
   },
