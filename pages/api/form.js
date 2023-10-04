@@ -1,35 +1,13 @@
 // pages/api/form.js
-const express = require('express');
-const next = require('next');
-const cors = require('cors');
+
 import { Pool } from 'pg';
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
-app.prepare().then(() => {
-  const server = express();
+import cors from 'cors';
 
-  // Use the cors middleware
-  server.use(cors());
-
-  // Define your API routes or other server logic here
-  server.get('/api/data', (req, res) => {
-    // Your API logic here
-    res.json({ data: 'Hello from the API!' });
-  });
-
-  // Default Next.js handler
-  server.all('*', (req, res) => {
-    return handle(req, res);
-  });
-
-  const PORT = process.env.PORT || 3000;
-
-  server.listen(PORT, (err) => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${PORT}`);
-  });
-});
+// const corsMiddleware = cors({
+//   origin: '*',
+//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//   credentials: true,
+// });
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgres://default:E1g7HuMAkcRn@ep-billowing-boat-04198773.eu-central-1.postgres.vercel-storage.com:5432/verceldb',
@@ -39,6 +17,24 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
+  console.log('Received request with method:', req.method);
+  // corsMiddleware(req, res);
+  // Set CORS headers for all routes
+  res.setHeader('Access-Control-Allow-Origin', '*');
+
+   res.setHeader('Access-Control-Allow-Credentials', true);
+   res.setHeader('Access-Control-Allow-Origin', '*');
+   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+   res.setHeader(
+     'Access-Control-Allow-Headers',
+     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+   );
+
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  console.log(req)
   if (req.method === 'POST') {
     try {
       const { name, email, people, note } = req.body;
@@ -54,17 +50,17 @@ export default async function handler(req, res) {
       console.error('Error executing query', error);
       res.status(500).json({ status: 'error', message: 'Error saving form submission' });
     }
-  } else if (req.method === 'GET') {
-    try {
-      const result = await pool.query('SELECT * FROM your_table');
-      const data = result.rows;
-      res.status(200).json({ status: 'success', data });
-      console.log(data);
-    } catch (error) {
-      console.error('Error executing query', error);
-      res.status(500).json({ status: 'error', message: 'Error retrieving data' });
-    }
+   } else if (req.method === 'GET') {
+     try {
+       const result = await pool.query('SELECT * FROM your_table');
+       const data = result.rows;
+       res.status(200).json({ status: 'success', data });
+       console.log(data);
+     } catch (error) {
+       console.error('Error executing query', error);
+       res.status(500).json({ status: 'error', message: 'Error retrieving data' });
+     }
   } else {
-    res.status(405).json({ status: 'error', message: 'Method Not Allowed' });
+    res.status(405).json({ status: 'error', message: 'pippo' });
   }
 }
