@@ -64,16 +64,17 @@ export default async function handler(req, res) {
   }
   async function sendConfirmationEmail(name, email) {
     const transporter = nodemailer.createTransport({
-      // configure your email service here (e.g., SMTP, Gmail, etc.)
-      service: 'gmail',
+      host: 'smtp.zoho.eu',
+      port: 465,
+      secure: true, //ssl
       auth: {
-        user: 'gianlucarizz@gmail.com', // replace with your email
-        pass: 'stratocaster92', // replace with your email password
-      },
+        user:'gianlucaeannasposi@zoho.eu',
+        pass: 'Giari2.100320'
+    }
     });
 
     const mailOptions = {
-      from: 'gianlucarizz@gmail.com', // replace with your email
+      from: 'gianlucaeannasposi@zoho.eu', // replace with your email
       to: email,
       subject: 'Form Submission Confirmation',
       text: `Dear ${name},\n\nThank you for submitting the form. Your information has been received successfully.`,
