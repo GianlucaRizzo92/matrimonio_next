@@ -68,13 +68,13 @@ export default async function handler(req, res) {
       port: 465,
       secure: true, //ssl
       auth: {
-        user:'gianlucaeannasposi@zoho.eu',
+        user:'gianlucaeannasposi@zohomail.eu',
         pass: 'Giari2.100320'
     }
     });
 
     const mailOptions = {
-      from: 'gianlucaeannasposi@zoho.eu', // replace with your email
+      from: 'gianlucaeannasposi@zohomail.eu', // replace with your email
       to: email,
       subject: 'Form Submission Confirmation',
       text: `Dear ${name},\n\nThank you for submitting the form. Your information has been received successfully.`,
