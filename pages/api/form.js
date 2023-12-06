@@ -68,8 +68,8 @@ export default async function handler(req, res) {
       port: 465,
       secure: true, //ssl
       auth: {
-        user:'gianlucaeannasposi@zohomail.eu',
-        pass:'Giari2.100320'
+        user:process.env.EMAIL_USER,
+        pass:process.env.EMAIL_PASS
     }
     });
 
