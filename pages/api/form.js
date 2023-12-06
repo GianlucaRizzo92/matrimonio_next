@@ -2,6 +2,7 @@
 
 import { Pool } from 'pg';
 import cors from 'cors';
+import nodemailer from 'nodemailer';
 
 // const corsMiddleware = cors({
 //   origin: '*',
@@ -17,7 +18,6 @@ const pool = new Pool({
 });
 
 export default async function handler(req, res) {
-  console.log('Received request with method:', req.method);
   // corsMiddleware(req, res);
   // Set CORS headers for all routes
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,7 +34,6 @@ export default async function handler(req, res) {
     res.status(200).end();
     return;
   }
-  console.log(req)
   if (req.method === 'POST') {
     try {
       const { name, email, people, note } = req.body;
@@ -44,7 +43,8 @@ export default async function handler(req, res) {
         [name, email, people, note]
       );
 
-      console.log('Form submission saved successfully');
+      await sendConfirmationEmail(name, email);
+
       res.status(200).json({ status: 'success', message: 'Form submission saved' });
     } catch (error) {
       console.error('Error executing query', error);
@@ -55,12 +55,31 @@ export default async function handler(req, res) {
        const result = await pool.query('SELECT * FROM your_table');
        const data = result.rows;
        res.status(200).json({ status: 'success', data });
-       console.log(data);
      } catch (error) {
        console.error('Error executing query', error);
        res.status(500).json({ status: 'error', message: 'Error retrieving data' });
      }
   } else {
     res.status(405).json({ status: 'error', message: 'pippo' });
+  }
+  async function sendConfirmationEmail(name, email) {
+    const transporter = nodemailer.createTransport({
+      // configure your email service here (e.g., SMTP, Gmail, etc.)
+      service: 'gmail',
+      auth: {
+        user: 'gianlucarizz@gmail.com', // replace with your email
+        pass: 'stratocaster92', // replace with your email password
+      },
+    });
+
+    const mailOptions = {
+      from: 'gianlucarizz@gmail.com', // replace with your email
+      to: email,
+      subject: 'Form Submission Confirmation',
+      text: `Dear ${name},\n\nThank you for submitting the form. Your information has been received successfully.`,
+    };
+
+    // Send the email
+    await transporter.sendMail(mailOptions);
   }
 }
