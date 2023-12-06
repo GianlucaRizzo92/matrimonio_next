@@ -68,16 +68,19 @@ export default async function handler(req, res) {
       port: 465,
       secure: true, //ssl
       auth: {
-        user:'gianlucaeannasposi@zohomail.eu',
-        pass: 'Giari2.100320'
+        user:process.env.EMAIL_USER,
+        pass:process.env.EMAIL_PASS
     }
     });
 
     const mailOptions = {
-      from: 'gianlucaeannasposi@zohomail.eu', // replace with your email
+      from: 'gianlucaeannasposi@zohomail.eu',
       to: email,
-      subject: 'Form Submission Confirmation',
-      text: `Dear ${name},\n\nThank you for submitting the form. Your information has been received successfully.`,
+      subject: 'Conferma di partecipazione',
+      text: `Ciao,\n\n Grazie per aver confermato la partecipazione alle nozze di Ginaluca e Anna.\n\n
+      Ti ricordiamo che la data dell'evento è il 13 luglio 2024 e si svolgerà a Rieti. La cerimonia sarà presso il Santuario di Poggio Bustone, mentre la cena sarà a Colle Aluffi. Per ulteriori info consulta il sito www.gianlucaeannasposi.it.\n\n
+      Non vediamo l'ora di vederti\n\n
+      Gianluca e Anna`,
     };
 
     // Send the email
